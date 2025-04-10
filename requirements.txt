@@ -7,3 +7,5 @@ passlib[bcrypt]
 python-jose[cryptography]
 python-multipart
 databases
+python-dotenv
+pydantic-settings
