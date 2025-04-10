@@ -3,11 +3,11 @@ name: Build Blog Backend
 on:
   push:
     branches: 
-     - main
-     - portfolio
-    pull request:
-        branches:
-            [main, portfolio]
+      - main
+      - portfolio
+    pull_request:
+      branches:
+        [main, portfolio]
 jobs:
   build:
 
