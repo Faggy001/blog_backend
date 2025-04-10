@@ -12,7 +12,7 @@ RUN python -m venv venv && \
 
 COPY app app/
 
-COPY .env .
+#COPY .env .
 
 EXPOSE 8000
 
