@@ -4,8 +4,9 @@ from app.db.session import get_db
 from app.schemas import post as schemas
 from app.services import post as services
 from app.services.user import get_current_user
-from typing import List, Optional
+from typing import List, Optional, Dict
 
+    
 router = APIRouter()
 
 @router.post("/", response_model=schemas.Post, status_code=status.HTTP_201_CREATED)
@@ -16,10 +17,14 @@ def create_post(post: schemas.PostCreate, db: Session = Depends(get_db), current
 def update_post(post_id: int, post: schemas.PostCreate, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
     return services.update_post(db, post_id, post, current_user)
 
-@router.get("/", response_model=List[schemas.Post])
-def list_posts(db: Session = Depends(get_db)):
+@router.get("", response_model=schemas.PostResponse) 
+def list_posts(
+    db: Session = Depends(get_db),
+    limit: int = Query(10, description="Number of posts per page"),
+    offset: int = Query(0, description="Offset for pagination"),
+    ):
     """Retrieve all blog posts."""
-    return services.list_all_posts(db)
+    return services.list_all_posts(db, limit=limit, offset=offset)
 
 @router.get("/{post_id}", response_model=schemas.Post)
 def get_post(post_id: int, db: Session = Depends(get_db)):
@@ -36,7 +41,6 @@ def filter_posts(
 ):
     """Filter posts by title, author, or date range."""
     return services.get_filtered_posts(db, title, author_id, start_date, end_date)
-
 @router.delete("/{post_id}")
 def delete_post(post_id: int, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
     return services.delete_post(db, post_id, current_user)
@@ -46,5 +50,10 @@ def like_post(post_id: int, db: Session = Depends(get_db), current_user=Depends(
     return services.like_post(db, post_id, current_user)
 
 @router.post("/{post_id}/comment")
-def add_comment(post_id: int, comment_text: str, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
-    return services.add_comment(db, post_id, comment_text, current_user)
+def add_comment(
+    post_id: int, 
+    request: schemas.Comment, 
+    db: Session = Depends(get_db), 
+    current_user=Depends(get_current_user)
+):
+    return services.add_comment(db, post_id, request.comment_text, current_user)
