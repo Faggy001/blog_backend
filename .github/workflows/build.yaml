@@ -30,7 +30,9 @@ jobs:
 
       - name: Build docker image
         run: |
-          cd ./..
+          cd ./../..
+
+          ls -la
           docker build -t blogworkflow . 
       
       - name: Tag image
