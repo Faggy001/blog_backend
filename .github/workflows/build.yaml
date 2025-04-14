@@ -34,7 +34,7 @@ jobs:
           docker build -t blogworkflow . 
       
       - name: Tag image
-        run: docker tag blogworkflow :latest ${{vars.DOCKER_USERNAME}}/blog:${{github.sha}}
+        run: docker tag blogworkflow:latest ${{vars.DOCKER_USERNAME}}/blog:${{github.sha}}
         
       - name: Push image
         run: docker push ${{vars.DOCKER_USERNAME}}/blog:${{github.sha}}  
