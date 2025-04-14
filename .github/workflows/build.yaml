@@ -24,27 +24,42 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      - name: Login to Dockerhub
+        run: docker login -u ${{vars.DOCKER_USERNAME}} -P ${{secrets.DOCKER_PASS}}
+
+      - name: Build docker image
+        run: |
+          cd ./..
+          docker build -t blogworkflow . 
+      
+      - name: Tag image
+        run: docker tag blogworkflow :latest ${{vars.DOCKER_USERNAME}}/blog:${{github.sha}}
+        
+      - name: Push image
+        run: docker push ${{vars.DOCKER_USERNAME}}/blog:${{github.sha}}  
                 
-      - name: Extract Docker image metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-            images: ${{ vars.DOCKER_USERNAME }}/blog
+      #- name: Extract Docker image metadata
+       # id: meta
+       # uses: docker/metadata-action@v5
+       # with:
+       #     images: ${{ vars.DOCKER_USERNAME }}/blog
 
-      - name: Log in to docker hub
-        uses: docker/login-action@v3
-        with:      
-         username: ${{ vars.DOCKER_USERNAME }}
-         password: ${{ secrets.DOCKER_PASS }}
+      #- name: Log in to docker hub
+       # uses: docker/login-action@v3
+        #with:      
+       #  username: ${{ vars.DOCKER_USERNAME }}
+        # password: ${{ secrets.DOCKER_PASS }}
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+     # - name: Set up Docker Buildx
+      #  uses: docker/setup-buildx-action@v3
 
-      - name: build and push Docker image
-        uses: docker/build-push-action@v6
-        with:
-            push: ${{ github.event_name != 'pull_request' }}
-            tags: ${{ steps.meta.outputs.tags }}
-            annotations: ${{ steps.meta.outputs.annotations }}
-            provenance: true
-            sbom: true
+     # - name: build and push Docker image
+     #   uses: docker/build-push-action@v6
+     #   with:
+     #       push: ${{ github.event_name != 'pull_request' }}
+     #       tags: ${{ steps.meta.outputs.tags }}
+     #        annotations: ${{ steps.meta.outputs.annotations }}
+     #       provenance: true
+     #       sbom: true
+    
