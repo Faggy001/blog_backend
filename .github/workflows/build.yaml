@@ -38,8 +38,7 @@ jobs:
         
       - name: Push image
         run: docker push ${{vars.DOCKER_USERNAME}}/blog:${{github.sha}}  
-        
- EC2-Deploy:
+  EC2-Deploy:
     runs-on: ubuntu-latest
     steps:
       - id: deploy
