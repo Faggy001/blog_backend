@@ -30,8 +30,6 @@ jobs:
 
       - name: Build docker image
         run: |
-          cd ./../..
-
           ls -la
           docker build -t blogworkflow . 
       
