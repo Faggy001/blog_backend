@@ -53,9 +53,9 @@ jobs:
 
         run: |        
           mkdir -p ~/.ssh
-          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOST_NAME} 
-          docker run -d -p 8000:8000 ${{vars.DOCKER_USERNAME}}/blog:${{github.sha}}
+          echo "$PRIVATE_KEY" > ~/.ssh/private_key && chmod 600 ~/.ssh/private_key
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${USER_NAME}@${HOSTNAME} docker stop blog-container || true && docker rm blog-container || true
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${USER_NAME}@${HOSTNAME} docker run -d --name blog-container -p 8000:8000 ${{ vars.DOCKER_USERNAME }}/blog:${{ github.sha }}
 
 
 
