@@ -54,6 +54,7 @@ jobs:
         run: |        
           mkdir -p ~/.ssh
           echo "$PRIVATE_KEY" > ~/.ssh/private_key && chmod 600 ~/.ssh/private_key        
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${USER_NAME}@${HOSTNAME} docker stop blog-container || true && docker rm blog-container || true
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${USER_NAME}@${HOSTNAME} docker run -d --name blog-container -p 8000:8000 ${{ vars.DOCKER_USERNAME }}/blog:${{ github.sha }}
 
 
@@ -72,7 +73,7 @@ jobs:
        #  username: ${{ vars.DOCKER_USERNAME }}
         # password: ${{ secrets.DOCKER_PASS }}
 
-     # - name: Set up Docker Buildxx
+     # - name: Set up Docker Buildx
       #  uses: docker/setup-buildx-action@v3
 
      # - name: build and push Docker image
