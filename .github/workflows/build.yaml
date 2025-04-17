@@ -61,7 +61,7 @@ jobs:
 
               
                 
-      #- name: Extract Docker image metadata
+      #- name: Extract Docker image metadatas
        # id: meta
        # uses: docker/metadata-action@v5
        # with:
