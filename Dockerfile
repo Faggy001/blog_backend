@@ -6,13 +6,13 @@ RUN apk add --no-cache gcc libffi-dev musl-dev postgresql-dev py3-virtualenv
 
 COPY requirements.txt . 
 
-RUN python -m venv venv && \
+RUN python3 -m venv venv && \
     source venv/bin/activate && \
     venv/bin/pip install --no-cache-dir -r requirements.txt
 
 COPY app app/
 
-#COPY .env .
+COPY .env .
 
 EXPOSE 8000
 

@@ -22,7 +22,7 @@ RUN apk add --no-cache libffi libpq && \
 COPY --from=builder /app/venv /app/venv
 COPY --chown=appuser:appuser --chmod=755 api/ ./api/
 COPY --chown=appuser:appuser --chmod=755 main.py .
-# COPY --chown=appuser:appuser --chmod=755 .env .
+COPY --chown=appuser:appuser --chmod=755 .env .
 
 USER appuser
 

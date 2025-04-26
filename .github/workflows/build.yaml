@@ -20,7 +20,7 @@ jobs:
       - name: Set up Python 
         uses: actions/setup-python@v5
         with:
-            python-version: "3.12"
+            python-version: "3.120000000"
 
       - name: Install dependencies
         run: pip install -r requirements.txt
@@ -54,13 +54,14 @@ jobs:
         run: |        
           mkdir -p ~/.ssh
           echo "$PRIVATE_KEY" > ~/.ssh/private_key && chmod 600 ~/.ssh/private_key        
-          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOST_NAME} 
-          docker run -d -p 8000:8000 ${{vars.DOCKER_USERNAME}}/blog:${{github.sha}}
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${USER_NAME}@${HOSTNAME} docker stop blog-container || true && docker rm blog-container || true
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/private_key ${USER_NAME}@${HOSTNAME} docker run -d --name blog-container -p 8000:8000 ${{ vars.DOCKER_USERNAME }}/blog:${{ github.sha }}
+
 
 
               
                 
-      #- name: Extract Docker image metadatas
+      #- name: Extract Docker image metadata
        # id: meta
        # uses: docker/metadata-action@v5
        # with:
